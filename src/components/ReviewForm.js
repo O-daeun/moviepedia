@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./ReviewForm.css";
 import FileInput from "./FileInput";
 import RatingInput from "./RatingInput";
-import { createReview } from "../api";
 
 const INITIAL_VALUES = {
   title: "",
@@ -14,8 +13,9 @@ const INITIAL_VALUES = {
 export default function ReviewForm({
   initialValues = INITIAL_VALUES,
   initialPreview,
-  onSubmitSuccess,
   onCancel,
+  onSubmit,
+  onSubmitSuccess,
 }) {
   const [values, setValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +43,7 @@ export default function ReviewForm({
     try {
       setSubmittingError(null);
       setIsSubmitting(true);
-      result = await createReview(formData);
+      result = await onSubmit(formData);
     } catch (error) {
       setSubmittingError(error);
       return;
