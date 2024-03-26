@@ -3,6 +3,7 @@ import ReviewList from "./ReviewList";
 import { createReview, deleteReview, getReviews, updateReview } from "../api";
 import ReviewForm from "./ReviewForm";
 import useAsync from "../hooks/useAsync";
+import LocaleContext from "../contexts/LocaleContext";
 
 const LIMIT = 6;
 
@@ -65,7 +66,7 @@ function App() {
   }, [order, handleLoad]);
 
   return (
-    <div>
+    <LocaleContext.Provider value={"ko"}>
       <div>
         <button onClick={handleNewestClick}>최신순</button>
         <button onClick={handleBestClick}>베스트순</button>
@@ -86,7 +87,7 @@ function App() {
           더 보기
         </button>
       )}
-    </div>
+    </LocaleContext.Provider>
   );
 }
 
