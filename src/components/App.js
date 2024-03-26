@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ReviewList from "./ReviewList";
 import { createReview, deleteReview, getReviews, updateReview } from "../api";
 import ReviewForm from "./ReviewForm";
+import useAsync from "../hooks/useAsync";
 
 const LIMIT = 6;
 
@@ -9,8 +10,7 @@ function App() {
   const [order, setOrder] = useState("createdAt");
   const [offset, setOffset] = useState(0);
   const [hasNext, setHasNext] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingError, setLoadingError] = useState(null);
+  const [isLoading, loadingError, getReviewsAsync] = useAsync(getReviews);
   const [items, setItems] = useState([]);
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
@@ -25,16 +25,8 @@ function App() {
   };
 
   const handleLoad = async (options) => {
-    let result;
-    try {
-      setIsLoading(true);
-      result = await getReviews(options);
-    } catch (error) {
-      setLoadingError(error);
-      return;
-    } finally {
-      setIsLoading(false);
-    }
+    let result = await getReviewsAsync(options);
+    if (!result) return;
 
     const { paging, reviews } = result;
     if (options.offset === 0) {
